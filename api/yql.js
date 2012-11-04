@@ -1,76 +1,68 @@
-function _handleResponse(error, response, body, next) {
-var errorMessage;
+var request = require("./request");
+var requestresponse = require("./requestresponse");
 
-assert.ok(next, "next");
+var _keys = null;
 
-if (error) {
-errorMessage = "Failed with error.";
+function formatQuery(xpath) {
+	var format = "%s AND xpath='%s'";
 
-} else if (!response) {
-errorMessage = "Failed with no response.";
+	// TODO: parameterize URL.
+	var url = "SELECT * FROM html WHERE url='http://madlab.org.uk'";
 
-} else if (response.statusCode != 200) {
-errorMessage = util.format("Failed with status code %d.", response.statusCode);
-
-} else if (!body) {
-errorMessage = "Failed with no body.";
-
+	return util.format(format, url, xpath);
 }
 
-if (errorMessage) {
-next({
-message: errorMessage,
-error: error,
-response: response,
-body: body
-});
+function parseResponse(error, response) {
+	if (error) {
+		console.dir(error);
+		next(error);
 
-} else {
-next(null, body);
+	} else {
+		console.dir(response);
+
+		var placemark = response.Placemark[0];
+		var point = placemark.Point;
+		var coordinates = point.coordinates;
+
+		next(null, {
+			lat: coordinates[1],
+			lng: coordinates[0]
+		});
+	}
 }
+
+function use(keys) {
+	assert.ok(keys);
+	_keys = keys;
 }
 
+function _exec(q) {
+	assert.ok(_keys, "_keys");
+	assert.ok(q, "q");
 
+	var endpoint = url.format({
+		protocol: "http",
+		hostname: "query.yahooapis.com",
+		// TODO: pathname: "/v1/public/yql",
+		pathname: "/v1/yql",
+		query: {
+			q: q,
+			format: "json",
+			ck: keys.consumerKey,
+			cs: keys.consumerSecret
+		}
+	});
 
-function exec(query) {
-        var parseResponse = function(error, response) {
-                // console.dir(arguments);
+	var options = {
+		url: endpoint,
+		json: true
+	};
 
-                if (error) {
-                        console.dir(error);
-                        next(error);
-
-                } else {
-                        console.dir(response);
-
-                        var placemark = response.Placemark[0];
-                        var point = placemark.Point;
-                        var coordinates = point.coordinates;
-
-                        next(null, {
-                                lat: coordinates[1],
-                                lng: coordinates[0]
-                        });
-                }
-        };
-
-        var endpoint = url.format({
-protocol: "http",
-hostname: "maps.google.com",
-pathname: "maps/geo",
-query: {
-q: q,
-output: "json",
-sensor: false
+	request(options, function(error, response, body) {
+		requestresponse.handleResponse(error, response, body, parseResponse);
+	});
 }
-});
 
-var options = {
-url: endpoint,
-json: true
-};
-
-request(options, function(error, response, body) {
-_handleResponse(error, response, body, parseResponse);
-});
-}
+// Exports.
+exports.use = use;
+exports.exec = exec;

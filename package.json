@@ -4,11 +4,12 @@
   "description": "ERROR: No README.md file found!",
   "main": "server.js",
   "dependencies": {
+    "config": "~0.4.17",
     "express": "~3.0.1",
     "jade": "~0.27.6",
+    "moment": "~1.7.2",
     "request": "~2.11.4",
-    "underscore": "~1.4.2",
-    "yql": "~0.4.8"
+    "underscore": "~1.4.2"
   },
   "devDependencies": {},
   "scripts": {
