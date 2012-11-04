@@ -1,0 +1,20 @@
+!!!5
+html
+  head
+    link(rel="stylesheet", href="/bootstrap/css/bootstrap.css")
+
+  body
+    div.page-header
+      h1 &nbsp;#{title}&nbsp;
+        small #{subtitle}
+
+    .div.container-fluid
+      .div.row-fluid
+        .div.span2
+          block sidebar
+        .div.span10
+          block content
+
+    footer
+      p
+        |&nbsp;Running on Node.js with Express and Jade.
