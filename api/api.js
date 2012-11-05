@@ -3,7 +3,7 @@ var assert = require("assert");
 var ical = require("ical");
 var moment = require("moment");
 var request = require("request");
-var requestresponse = require("./requestresponse");
+var requestex = require("./requestex");
 var url = require("url");
 var util = require("util");
 
@@ -24,7 +24,7 @@ function _getCalendar(next) {
 	};
 
 	request(options, function(error, response, body) {
-		requestresponse.handleResponse(error, response, body, next);
+		requestex.handleResponse(error, response, body, next);
 	});
 }
 
