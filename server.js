@@ -1,9 +1,7 @@
-// Utility packages.
-var util = require("util");
-
-// Express and request.
+var assert = require("assert");
 var express = require("express");
 var request = require("request");
+var util = require("util");
 
 // Create Express app.
 var app = express();
@@ -24,11 +22,43 @@ app.use(express.logger("dev"));
 // API Routes.
 var api = require("./api/api").use(app);
 
-// Hello World route.
 app.get("/", function(req, res) {
 	res.render("index", {
-		title: "Welcome to the MadLab API",
-		subtitle: "powered by Node.js"
+		page: {
+			title: "MadLab",
+			subtitle: "api",
+			tag: "index"
+		}
+	});
+});
+
+app.get("/events", function(req, res) {
+	res.render("events", {
+		page: {
+			title: "MadLab",
+			subtitle: "events",
+			tag: "events"
+		}
+	});
+});
+
+app.get("/pictures", function(req, res) {
+	res.render("pictures", {
+		page: {
+			title: "MadLab",
+			subtitle: "pictures",
+			tag: "pictures"
+		}
+	});
+});
+
+app.get("/blog", function(req, res) {
+	res.render("blog", {
+		page: {
+			title: "MadLab",
+			subtitle: "blog",
+			tag: "blog"
+		}
 	});
 });
 
@@ -40,4 +70,3 @@ var port = process.env.PORT || 3000;
 app.listen(port, function() {
 	console.log(util.format("Listening on %d.", port));
 });
-

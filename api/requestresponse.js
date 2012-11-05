@@ -1,4 +1,4 @@
-// Utility packages.
+var assert = require("assert");
 var util = require("util");
 
 function _handleResponse(error, response, body, next) {

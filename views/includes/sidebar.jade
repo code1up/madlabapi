@@ -1,0 +1,15 @@
+ul.nav.nav-tabs.nav-stacked
+	- var active = "active";
+	- var none = "";
+
+	li(class = page.tag == "index" ? active : none)
+		a(href = "/") Home
+
+	li(class = page.tag == "events" ? active : none)
+		a(href = "/events") Events
+
+	li(class = page.tag == "pictures" ? active : none)
+		a(href = "/pictures") Pictures
+
+	li(class = page.tag == "blog" ? active : none)
+		a(href = "/blog") Blog
