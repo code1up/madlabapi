@@ -1,4 +1,3 @@
-
 var assert = require("assert");
 var util = require("util");
 
@@ -32,7 +31,7 @@ function _handleResponse(error, response, body, next) {
 		});
 
 	} else {
-		next(null, body);
+		next(null, response, body);
 	}
 }
 

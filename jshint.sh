@@ -1,4 +1,4 @@
 jshint ./*.js
-# jshint ./routes/*.js
 jshint ./api/*.js
+jshint ./routes/api/*.js
 
