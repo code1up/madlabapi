@@ -33,7 +33,7 @@ function _use(app) {
 		_getCalendar(function(error, body) {
 			assert.ok(body, "body");
 
-			console.log(body);
+			// console.log(body);
 
 			var calendar = ical.parseICS(body);
 			var entries = [];
@@ -41,13 +41,28 @@ function _use(app) {
 			console.dir(calendar);
 
 			_.each(calendar, function(each) {
+				if (each.params) {
+					// console.dir(each.params);
+				}
+
 				var entry = {
 					uid: each.uid,
+					
 					start: each.start,
 					end: each.end,
-					location: each.location && each.location.trim(),
-					summary: each.summary && each.summary.trim(),
-					description: each.description && each.description.val && each.description.val.trim()
+
+					location:
+						each.location &&
+						each.location.trim(),
+
+					summary:
+						each.summary &&
+						each.summary.trim(),
+
+					description:
+						each.description &&
+						each.description.val &&
+						each.description.val.trim()
 				};
 
 				entries.push(entry);
