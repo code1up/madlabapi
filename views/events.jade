@@ -1,6 +1,21 @@
 extend layout
 
 block content
+	table.table.table-bordered.table-condensed.table-striped
+		thead
+			tr
+				th When
+				th Duration
+				th Where
+				th Summary
+
+		tbody
+			each event in model.calendar
+				tr
+					td #{event.startDateTimeString}
+					td #{event.duration} #{event.durationUnits}
+					td #{event.location}
+					td #{event.summary}
 
 block sidebar
 	include includes/sidebar

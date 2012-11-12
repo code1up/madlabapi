@@ -1,9 +1,11 @@
 var _ = require("underscore");
 var assert = require("assert");
 var ical = require("ical");
+var moment = require("moment");
 var request = require("request");
 var requestex = require("./requestex");
 var url = require("url");
+var schema = require("../store/schema");
 
 function _getRawCalendar(next) {
 	assert.ok(next, "next");
@@ -41,15 +43,29 @@ function _getCalendar(next) {
 
 		var calendar = ical.parseICS(body);
 		var events = [];
+		var formatter = moment();
 
 		console.dir(calendar);
 
 		_.each(calendar, function(each) {
-			var event = {
+			var duration = moment(each.end).diff(each.start, "hours");
+
+			if (duration < 24) {
+				durationUnits = duration <= 1 ? "hour" : "hours";
+
+			} else {
+				duration = moment(each.end).diff(each.start, "days") + 1;
+				durationUnits = "days";
+			}
+
+			var event = new schema.Event({
 				uid: each.uid,
 				
-				start: each.start,
-				end: each.end,
+				startDateTime: each.start,
+				endDateTime: each.end,
+
+				duration: duration,
+				durationUnits: durationUnits,
 
 				location:
 					each.location &&
@@ -63,9 +79,28 @@ function _getCalendar(next) {
 					each.description &&
 					each.description.val &&
 					each.description.val.trim()
+			});
+
+			
+			console.dir(event);
+			events.push(event);
+
+			var query = {
+				uid: event.uid
 			};
 
-			events.push(event);
+			var options = {
+				upsert: true
+			};
+
+			schema.Event.findOneAndUpdate(query, event, options, function(error, newEvent) {
+				if (error) {
+					console.error("Failed to save event:");
+					console.error("%j");
+				} else {
+					console.log("Saved event!");
+				}	
+			});
 		});
 
 		next(null, events);

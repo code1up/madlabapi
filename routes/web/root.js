@@ -1,19 +1,24 @@
-function _use(app) {
+function _use(app, controller) {
 	var assert = require("assert");
 
 	assert.ok(app, "app");
 
-	app.get("/", function(req, res) {
+	var _path = "/";
+
+	app.get(_path, function(req, res) {
 		assert.ok(req, "req");
 		assert.ok(res, "res");
 
-		res.render("index", {
+		var view = {
+			controller: controller,
+			path: _path,
 			page: {
-				title: "MadLab",
-				subtitle: "api",
-				tag: "index"
+				title: "MadLab API",
+				subtitle: "home"
 			}
-		});
+		};
+
+		res.render("index", view);
 	});
 }
 
