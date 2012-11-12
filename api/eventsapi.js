@@ -85,6 +85,7 @@ function _getCalendar(next) {
 			console.dir(event);
 			events.push(event);
 
+			/*
 			var query = {
 				uid: event.uid
 			};
@@ -101,6 +102,7 @@ function _getCalendar(next) {
 					console.log("Saved event!");
 				}	
 			});
+			*/
 		});
 
 		next(null, events);
