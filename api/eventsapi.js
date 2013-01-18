@@ -5,7 +5,7 @@ var moment = require("moment");
 var request = require("request");
 var requestex = require("./requestex");
 var url = require("url");
-var schema = require("../store/schema");
+// var schema = require("../store/schema");
 
 function _getRawCalendar(next) {
 	assert.ok(next, "next");
@@ -15,7 +15,7 @@ function _getRawCalendar(next) {
 		hostname: "madlab.org.uk",
 		pathname: "?ical",
 		query: {
-			// Empty.
+			// Empty (see pathname).
 		}
 	});
 
@@ -45,7 +45,7 @@ function _getCalendar(next) {
 		var events = [];
 		var formatter = moment();
 
-		console.dir(calendar);
+		// console.dir(calendar);
 
 		_.each(calendar, function(each) {
 			var duration = moment(each.end).diff(each.start, "hours");
@@ -82,7 +82,7 @@ function _getCalendar(next) {
 			});
 
 			
-			console.dir(event);
+			// console.dir(event);
 			events.push(event);
 
 			/*

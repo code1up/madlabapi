@@ -1,55 +1,39 @@
-var request = require("./request");
-var requestresponse = require("./requestresponse");
+var assert = require("assert");
+var request = require("request");
+var requestex = require("./requestex");
+var url = require("url");
 
 var _keys = null;
+var _maxAge = 3600; // seconds
 
-function formatQuery(xpath) {
-	var format = "%s AND xpath='%s'";
+function _configure(configuration) {
+	assert.ok(configuration, "configuration");
 
-	// TODO: parameterize URL.
-	var url = "SELECT * FROM html WHERE url='http://madlab.org.uk'";
+	assert.ok(configuration.keys, "configuration.keys");
+	assert.ok(configuration.keys.consumerKey, "configuration.keys.consumerKey");
+	assert.ok(configuration.keys.consumerSecret, "configuration.keys.consumerSecret");
 
-	return util.format(format, url, xpath);
+	_keys = configuration.keys;
+	_maxAge = configuration.maxAge || _maxAge;
+
+	return this;
 }
 
-function parseResponse(error, response) {
-	if (error) {
-		console.dir(error);
-		next(error);
-
-	} else {
-		console.dir(response);
-
-		var placemark = response.Placemark[0];
-		var point = placemark.Point;
-		var coordinates = point.coordinates;
-
-		next(null, {
-			lat: coordinates[1],
-			lng: coordinates[0]
-		});
-	}
-}
-
-function use(keys) {
-	assert.ok(keys);
-	_keys = keys;
-}
-
-function _exec(q) {
+function _exec(query, next) {
 	assert.ok(_keys, "_keys");
-	assert.ok(q, "q");
+	assert.ok(query, "query");
+	assert.ok(next, "next");
 
 	var endpoint = url.format({
 		protocol: "http",
 		hostname: "query.yahooapis.com",
-		// TODO: pathname: "/v1/public/yql",
-		pathname: "/v1/yql",
+		pathname: "/v1/public/yql",
 		query: {
-			q: q,
+			q: query,
 			format: "json",
-			ck: keys.consumerKey,
-			cs: keys.consumerSecret
+			// ck: _keys.consumerKey,
+			// cs: _keys.consumerSecret,
+			_maxage: _maxAge
 		}
 	});
 
@@ -59,10 +43,10 @@ function _exec(q) {
 	};
 
 	request(options, function(error, response, body) {
-		requestresponse.handleResponse(error, response, body, parseResponse);
+		requestex.handleResponse(error, response, body, next);
 	});
 }
 
 // Exports.
-exports.use = use;
-exports.exec = exec;
+exports.configure = _configure;
+exports.exec = _exec;

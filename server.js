@@ -1,7 +1,14 @@
 var assert = require("assert");
 var express = require("express");
 var request = require("request");
+var _ = require("underscore");
 var util = require("util");
+
+var eventsapi = require("./api/events");
+
+eventsapi.getUpcomingEvents(function(error, response) {
+	///_.each(response.)
+});
 
 // Create Express app.
 var app = express();
