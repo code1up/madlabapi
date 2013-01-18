@@ -5,7 +5,7 @@ var moment = require("moment");
 var request = require("request");
 var requestex = require("./requestex");
 var url = require("url");
-// var schema = require("../store/schema");
+var schema = require("../store/schema");
 
 function _getRawCalendar(next) {
 	assert.ok(next, "next");
@@ -80,7 +80,6 @@ function _getCalendar(next) {
 					each.description.val &&
 					each.description.val.trim()
 			});
-
 			
 			// console.dir(event);
 			events.push(event);
